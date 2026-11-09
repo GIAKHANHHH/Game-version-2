@@ -418,30 +418,32 @@
   function answerPanel() {
     return `
       <section class="hero">
-        <div class="eyebrow">NHẬP ĐÁP ÁN RIÊNG · KHÔNG HIỂN THỊ TRÊN MÀN CHIẾU</div>
-        <h1>Ban tổ chức nhập đáp án</h1>
-        <p>Các đội đã giơ bảng. Chọn đáp án quan sát được cho từng đội, sau đó công bố khi đã nhập đủ 6 đội.</p>
+        <div class="eyebrow">ĐIỀU KHIỂN RIÊNG · ĐÁP ÁN KHÔNG HIỂN THỊ TRÊN MÀN CHIẾU</div>
+        <h1>Nhập đáp án các đội</h1>
+        <p>Các đội đã giơ bảng. Ban tổ chức chọn đáp án quan sát được cho từng đội, sau đó công bố kết quả.</p>
       </section>
-      <div class="grid">
-        <section class="card span-7">
-          ${questionPanel()}
+      <div class="answer-layout">
+        <section class="card">${questionPanel()}</section>
+        <section class="card">
+          <div class="row answer-heading">
+            <div><h2>Đáp án của 6 đội</h2><p class="muted">Chọn A, B, C hoặc D theo bảng đáp án mỗi đội giơ lên.</p></div>
+            <span class="status gold">CHỈ BAN TỔ CHỨC</span>
+          </div>
+          <div class="answer-row">
+            ${state.teams.map(t => `
+              <div class="answer-cell">
+                <div class="answer-team">${escapeHtml(t.name)}</div>
+                <label for="answer-${t.id}">Đáp án đã giơ</label>
+                <select id="answer-${t.id}" data-answer="${t.id}">
+                  <option value="">Chưa nhập</option>
+                  ${["A","B","C","D"].map(a => `<option value="${a}" ${t.answer===a?"selected":""}>Đáp án ${a}</option>`).join("")}
+                </select>
+              </div>`).join("")}
+          </div>
+          <div class="note warning answer-note">Các lựa chọn này chỉ xuất hiện trên máy điều khiển. Màn chiếu không hiển thị đáp án từng đội.</div>
+          <div class="answer-actions">${button("CÔNG BỐ KẾT QUẢ CÂU NÀY", "reveal", "btn gold")}</div>
         </section>
-        <section class="card span-5">
-          <h2>Đáp án của từng đội</h2>
-          ${state.teams.map(t => `
-            <div class="row" style="margin:12px 0">
-              <strong>${escapeHtml(t.name)}</strong>
-              <select data-answer="${t.id}">
-                <option value="">Chưa nhập</option>
-                ${["A","B","C","D"].map(a => `<option value="${a}" ${t.answer===a?"selected":""}>${a}</option>`).join("")}
-              </select>
-            </div>`).join("")}
-          <div class="note warning">Đáp án ở khu vực này chỉ dành cho ban tổ chức. Học sinh chỉ nhìn thấy câu hỏi và mức cược trên màn chiếu.</div>
-          ${button("CÔNG BỐ KẾT QUẢ CÂU NÀY", "reveal", "btn gold full")}
-        </section>
-        <section class="card span-12">
-          <h2>Mức cược công khai</h2>${publicBidsTable()}
-        </section>
+        <section class="card"><h2>Mức cược công khai</h2>${publicBidsTable()}</section>
       </div>`;
   }
 
